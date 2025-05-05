@@ -1,42 +1,140 @@
-# Simple and portable CMake template for raylib
+# 💘 Barbie’s Love Detective
 
-This is a basic project template for raylib using CMake and has been tested with Visual Studio, Visual Studio Code and CLion.
+Um jogo de mistério romântico onde o jogador precisa descobrir quem é o crush secreto da Barbie. Com uma narrativa interativa, pistas enigmáticas e a ajuda de uma Inteligência Artificial, cada partida traz uma experiência diferente.
 
-The master branch of the raylib source code is downloaded using CMake FetchContent from github and compiled from source as it is much easier than including prebuilt binaries for every platform and configuration.
+---
 
-Building from the cmake file will build both raylib and `src/main.c` which includes a basic example of a raylib program.
+## 🎮 Sobre o Jogo
 
-## Asset handling
+**Barbie’s Love Detective** é um jogo desenvolvido em **C** que integra:
 
-The example in `src/main.c` uses an example image located in the `assets` folder.
-To load it we use `ASSETS_PATH`, which is a string macro with the *absolute* path "assets" directory.
-This macro is defined in the `CMakeLists.txt` file on line `23`.
- 
-If you plan on releasing or sharing your game consider manually setting the value of the `ASSETS_PATH` macro.
+- 📚 **Estruturas de dados** (listas encadeadas)
+- ⚙️ **Algoritmo de ordenação** (Insertion Sort)
+- 🤖 **Integração com API de Inteligência Artificial** (Gemini)
+- 🖼️ **Interface gráfica com Raylib**
 
-In C you can concatenate string literals by putting them next to each other, 
-eg: `"A" "B"` is `"AB"`. So ASSETS_PATH `"test.png"` becomes `"/path/to/your/assets/test.png"`
+A narrativa se adapta conforme as escolhas do jogador, e a IA altera dinamicamente pistas, diálogos e possíveis finais.
 
-If you wanna share your game with others you should set ASSETS_PATH to be a *relative* path like "./assets/". You can do this in the CMakeLists.txt file. 
+---
 
-## Using C++
+## 🧠 Estrutura de Dados
 
-Using c++ is quite simple, just change these lines in the `CMakeLists.txt`
-from
+### Lista Encadeada de Pistas
+
+Cada pista é um nó em uma lista ligada. A lista é fundamental para a lógica do jogo, pois é constantemente manipulada durante as interações:
+
+- Ao interagir com personagens, novas pistas são adicionadas.
+- A IA pode inserir pistas falsas ou remover pistas irrelevantes.
+- As pistas são ordenadas por relevância a cada rodada.
+- O jogador pode visualizar ou investigar pistas em tempo real.
+
+> A manipulação dessa estrutura influencia diretamente o rumo da investigação, as suspeitas levantadas e as decisões do jogador.
+
+---
+
+## ⚡ Algoritmo de Ordenação
+
+### Insertion Sort
+
+Usado para reorganizar os suspeitos ou pistas com base no grau de suspeita/relevância atribuído pela IA ou pelas ações do jogador.
+
+---
+
+## 🤖 API de Inteligência Artificial
+
+### Gemini (Google AI)
+
+Responsável por:
+
+- Gerar trechos narrativos personalizados
+- Modificar comportamentos de personagens
+- Adicionar ou alterar pistas com base nas escolhas do jogador
+- Criar finais alternativos
+
+---
+
+## 🔧 Funções Principais
+
+- `inserirPista()`
+- `removerPista()`
+- `ordenarPistas()`
+- `interagirPersonagem()`
+- `consultarIA()`
+- `mostrarMenu()`
+- `verificarCondicaoVitoria()`
+
+---
+
+## 🖼️ Interface Gráfica
+
+### Raylib
+
+- Interface com botões e diálogos
+- Tela inicial com botão “Começar”
+- Exibição de pistas e respostas da IA
+- Navegação entre escolhas
+
+---
+
+## 💻 Como Executar
+
+### 🔧 Requisitos
+
+- Compilador C (`gcc`)
+- `libcurl` (para comunicação com a API)
+- Internet (para chamadas à API Gemini)
+- Raylib (para interface gráfica)
+
+### 📦 Passos
+
+```bash
+git clone https://github.com/seu-usuario/BarbiesLoveDetective.git
+cd BarbiesLoveDetective
+gcc main.c -o jogo -lcurl
+./jogo
 ```
-project(my_raylib_game C)
 
-set(CMAKE_C_STANDARD 99)
+### 🎨 Para compilar com Raylib:
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.c")
+```bash
+gcc main.c -o jogo -lraylib -lcurl -lm -ldl -lpthread
 ```
-to
-```
-project(my_raylib_game CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+---
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.cpp")
-```
-After this just reload cmake and it should build fine.
+## 📽️ Vídeo
+
+🎥 Será disponibilizado na entrega final.
+
+---
+
+## 👩‍💻 Equipe
+
+- Amanda Montarroios  
+- Fabiana Coelho  
+- Julia Maria Teixeira  
+- Maria Julia Dantas  
+- Maria Luiza Dantas  
+
+---
+
+## 📚 Referências
+
+- API Gemini – Google AI
+- Notas de aula (Estrutura de Dados – 2025)
+- Raylib (https://www.raylib.com/)
+- libcurl – HTTP requests em C
+
+---
+
+## 🌟 Destaques
+
+- IA personalizada altera história e pistas
+- Uso prático de lista encadeada com manipulação dinâmica
+- Ordenação com finalidade narrativa (relevância e suspeita)
+- Interface opcional com Raylib
+- Tema criativo: romance + mistério
+
+---
+
+> Feito com 💗 por um time apaixonado por programação e boas histórias.
