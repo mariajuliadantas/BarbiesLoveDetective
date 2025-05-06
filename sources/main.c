@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#define ASSETS_PATH "assets/"
+
 
 #define SCREEN_WIDTH 1800
 #define SCREEN_HEIGHT 950
