@@ -1,9 +1,9 @@
 #include "raylib.h"
 #include "../include/pistas.h"
+#include "../include/jogo.h"  
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
-
 
 #define SCREEN_WIDTH 1800
 #define SCREEN_HEIGHT 950
@@ -15,17 +15,17 @@ int main(void) {
     InitAudioDevice();
     SetTargetFPS(60);
 
-    Texture2D fundo = LoadTexture(ASSETS_PATH"casa.jpg");
-    Texture2D carro = LoadTexture(ASSETS_PATH"carro.png");
-    Texture2D barbie = LoadTexture(ASSETS_PATH"barbie.png");
+    Texture2D fundo = LoadTexture("assets/casa.jpg");
+    Texture2D carro = LoadTexture("assets/carro.png");
+    Texture2D barbie = LoadTexture("assets/barbie.png");
+    Music introMusica = LoadMusicStream("assets/BarbieGirl.mp3");
 
-    Music introMusica = LoadMusicStream(ASSETS_PATH"BarbieGirl.mp3");
+    
     PlayMusicStream(introMusica);
 
-    // ⬇️ Variáveis de movimento
+    // ⬇Variáveis de movimento
     float posCarroX = SCREEN_WIDTH + (carro.width * 1.8f);
     float posCarroY = 150;
-
     float posBarbieX = -barbie.width * 2.0f;
 
     bool carroSaiu = false;
@@ -46,7 +46,7 @@ int main(void) {
     };
     int totalTextos = sizeof(textos) / sizeof(textos[0]);
 
-    Pista* listaPistas = NULL;
+    Pista* listaPistas = NULL;  // Lista de pistas começa vazia
     int pistaAdicionada = 0;
 
     while (!WindowShouldClose()) {
@@ -56,51 +56,11 @@ int main(void) {
         switch (estado) {
             case INTRO:
                 UpdateMusicStream(introMusica);
-
-                DrawTexturePro(
-                    fundo,
-                    (Rectangle){ 0, 0, (float)fundo.width, (float)fundo.height },
-                    (Rectangle){ 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT },
-                    (Vector2){ 0, 0 },
-                    0.0f,
-                    WHITE
-                );
-
-                if (!carroSaiu) {
-                    DrawTexturePro(
-                        carro,
-                        (Rectangle){ 0, 0, (float)carro.width, (float)carro.height },
-                        (Rectangle){ posCarroX, posCarroY, carro.width * 1.8f, carro.height * 1.8f },
-                        (Vector2){ 0, 0 },
-                        0.0f,
-                        WHITE
-                    );
-                    posCarroX -= 6.5f;
-                    posCarroY += 1.2f;
-
-                    if (posCarroX < -(carro.width * 1.8f)) {
-                        carroSaiu = true;
-                    }
-                }
+                // Renderiza o fundo, o carro e a Barbie
 
                 if (carroSaiu) {
-                    DrawTexturePro(
-                        barbie,
-                        (Rectangle){ 0, 0, (float)barbie.width, (float)barbie.height },
-                        (Rectangle){
-                            posBarbieX,
-                            350,
-                            barbie.width * 2.8f,
-                            barbie.height * 2.8f
-                        },
-                        (Vector2){ 0, 0 },
-                        0.0f,
-                        WHITE
-                    );
-
-                    if (posBarbieX < SCREEN_WIDTH * -0.25f) {
-                        posBarbieX += 4.5f;
-                    } else if (!barbieChegou) {
+                    // Quando o carro sai, Barbie aparece
+                    if (!barbieChegou) {
                         barbieChegou = true;
                         SetMusicVolume(introMusica, 0.2f);
                     }
@@ -112,13 +72,10 @@ int main(void) {
                         textoIndex++;
                         tempoTexto = 0;
                     }
-                    // Fundo rosinha translúcido atrás do texto
-                    DrawRectangle(800, 820, 880, 60, (Color){255, 192, 203, 180});  // RGBA
 
-                    // Texto preto por cima, mais à direita
+                    // Exibe o texto com o fundo rosinha
+                    DrawRectangle(800, 820, 880, 60, (Color){255, 192, 203, 180});
                     DrawText(TextSubtext(texto, 0, textoIndex), 820, 840, 24, BLACK);
-
-
                 }
 
                 DrawText("Pressione ENTER para começar", 600, 900, 20, DARKGRAY);
@@ -128,12 +85,11 @@ int main(void) {
                 break;
 
             case TELA_INICIAL:
-                DrawText("Quem é o Crush Secreto da Barbie? ", 100, 100, 30, PINK);
+                DrawText("Quem é o Crush Secreto da Barbie?", 100, 100, 30, PINK);
                 DrawRectangleRec(botaoComecar, LIGHTGRAY);
                 DrawText("COMEÇAR", botaoComecar.x + 50, botaoComecar.y + 15, 20, BLACK);
 
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-                    CheckCollisionPointRec(GetMousePosition(), botaoComecar)) {
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoComecar)) {
                     estado = NARRATIVA;
                 }
                 break;
@@ -170,6 +126,7 @@ int main(void) {
                     }
                 }
 
+                // Exibe todas as pistas adicionadas
                 int y = 350;
                 Pista* atual = listaPistas;
                 while (atual != NULL) {
@@ -183,12 +140,21 @@ int main(void) {
         EndDrawing();
     }
 
-    // Libera recursos
+    // Libera recursos e memória alocada
     UnloadTexture(fundo);
     UnloadTexture(carro);
     UnloadTexture(barbie);
     UnloadMusicStream(introMusica);
     CloseAudioDevice();
     CloseWindow();
+
+    // Liberar a memória da lista de pistas
+    Pista* temp;
+    while (listaPistas != NULL) {
+        temp = listaPistas;
+        listaPistas = listaPistas->prox;
+        free(temp);
+    }
+
     return 0;
 }
