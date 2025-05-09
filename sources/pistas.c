@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "../include/pistas.h"
 
 // Função para adicionar uma nova pista à lista
