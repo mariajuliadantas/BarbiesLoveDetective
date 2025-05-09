@@ -7,7 +7,7 @@
 void adicionarPista(Pista** lista, const char* descricao, int relevancia) {
     Pista* nova = (Pista*)malloc(sizeof(Pista));  // Aloca memória para a nova pista
     if (nova == NULL) {  // Verifica se a alocação de memória foi bem-sucedida
-        printf("Erro de alocação de memória!\n");
+       
         return;
     }
 
