@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 #define SCREEN_WIDTH 1800
 #define SCREEN_HEIGHT 950
 
@@ -56,11 +57,51 @@ int main(void) {
         switch (estado) {
             case INTRO:
                 UpdateMusicStream(introMusica);
-                // Renderiza o fundo, o carro e a Barbie
+
+                DrawTexturePro(
+                    fundo,
+                    (Rectangle){ 0, 0, (float)fundo.width, (float)fundo.height },
+                    (Rectangle){ 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT },
+                    (Vector2){ 0, 0 },
+                    0.0f,
+                    WHITE
+                );
+
+                if (!carroSaiu) {
+                    DrawTexturePro(
+                        carro,
+                        (Rectangle){ 0, 0, (float)carro.width, (float)carro.height },
+                        (Rectangle){ posCarroX, posCarroY, carro.width * 1.8f, carro.height * 1.8f },
+                        (Vector2){ 0, 0 },
+                        0.0f,
+                        WHITE
+                    );
+                    posCarroX -= 6.5f;
+                    posCarroY += 1.2f;
+
+                    if (posCarroX < -(carro.width * 1.8f)) {
+                        carroSaiu = true;
+                    }
+                }
 
                 if (carroSaiu) {
-                    // Quando o carro sai, Barbie aparece
-                    if (!barbieChegou) {
+                    DrawTexturePro(
+                        barbie,
+                        (Rectangle){ 0, 0, (float)barbie.width, (float)barbie.height },
+                        (Rectangle){
+                            posBarbieX,
+                            350,
+                            barbie.width * 2.8f,
+                            barbie.height * 2.8f
+                        },
+                        (Vector2){ 0, 0 },
+                        0.0f,
+                        WHITE
+                    );
+
+                    if (posBarbieX < SCREEN_WIDTH * -0.25f) {
+                        posBarbieX += 4.5f;
+                    } else if (!barbieChegou) {
                         barbieChegou = true;
                         SetMusicVolume(introMusica, 0.2f);
                     }
@@ -72,10 +113,13 @@ int main(void) {
                         textoIndex++;
                         tempoTexto = 0;
                     }
+                    // Fundo rosinha translúcido atrás do texto
+                    DrawRectangle(800, 820, 880, 60, (Color){255, 192, 203, 180});  // RGBA
 
-                    // Exibe o texto com o fundo rosinha
-                    DrawRectangle(800, 820, 880, 60, (Color){255, 192, 203, 180});
+                    // Texto preto por cima, mais à direita
                     DrawText(TextSubtext(texto, 0, textoIndex), 820, 840, 24, BLACK);
+
+
                 }
 
                 DrawText("Pressione ENTER para começar", 600, 900, 20, DARKGRAY);
